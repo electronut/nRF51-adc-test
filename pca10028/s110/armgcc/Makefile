@@ -240,7 +240,7 @@ flash: flash.jlink
 flash.jlink:
 	printf "loadbin $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).bin $(FLASH_START_ADDR)\nr\ng\nexit\n" > flash.jlink
 
-flash_softdevice:
+flash_softdevice: flashsd.jlink
 	$(JLINK) flashsd.jlink
 
 flashsd.jlink:
