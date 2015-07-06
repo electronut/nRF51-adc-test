@@ -217,22 +217,14 @@ FLASH_START_ADDR = $(shell $(OBJDUMP) -h $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FIL
 
 JLINK_OPTS = -device nrf51422_xxaa -if swd -speed 4000
 JLINK_GDB_OPTS = -noir
-JLINK = JLinkExe $(JLINK_OPTS)
 JLINKD_GDB = JLinkGDBServer $(JLINK_GDB_OPTS)
 
 # flashing windows vs. posix
 ifeq ($(OS),Windows_NT)
-
-flash: $(MAKECMDGOALS)
-	@echo Flashing: $(OUTPUT_BINARY_DIRECTORY)/$<.hex
-	nrfjprog --reset --program $(OUTPUT_BINARY_DIRECTORY)/$<.hex
-
-## Flash softdevice
-flash_softdevice: 
-	@echo Flashing: s110_softdevice.hex
-	nrfjprog --reset --program ../../../../../../components/softdevice/s110/hex/s110_softdevice.hex
-
-else # flashing windows vs. posix
+JLINK = JLink $(JLINK_OPTS)
+else
+JLINK = JLinkExe $(JLINK_OPTS)
+endif # flashing windows vs. posix
 
 flash: flash.jlink
 	$(JLINK) flash.jlink
@@ -261,4 +253,4 @@ run-debug:
 
 .PHONY:  flash-jlink flash.jlink erase-all erase-all.jlink run-debug
 
-endif # flashing windows vs. posix
+
