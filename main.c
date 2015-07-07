@@ -356,22 +356,25 @@ int main(void)
 {
     uint32_t err_code;
 
+    // set up timer
     APP_TIMER_INIT(0, (2 + BSP_APP_TIMERS_NUMBER), 4, false);
 
-    uart_init();
-
+    // initlialize BLE
     ble_stack_init();
     gap_params_init();
     services_init();
     advertising_init();
     conn_params_init();
+    err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
+    APP_ERROR_CHECK(err_code);
+   
+    // intialize UART
+    uart_init();
 
     // prints to serial port
     printf("starting...\n");
 
-    err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
-    APP_ERROR_CHECK(err_code);
-   
+    // set up ADC
     adc_config();
     nrf_adc_start();
 
@@ -388,7 +391,7 @@ int main(void)
       nrf_gpio_pin_clear(pinNum);
       nrf_delay_ms(100);
 
-      // send ADC value via NUS
+      // send ADC value via NUS (Nordic UART service)
       uint8_t str[4];
       sprintf((char*)str, "%d", (int)adc_sample);
       ble_nus_string_send(&m_nus, str, strlen((char*)str));
