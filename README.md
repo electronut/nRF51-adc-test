@@ -5,3 +5,5 @@ LED2 is also flashed.
 
 http://electronut.in/nrf51-adc-test/
 
+
+![nRF51-DK LDR setup](nrf-ldr-main.jpg "nRF51-DK LDR setup")
