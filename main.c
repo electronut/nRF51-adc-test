@@ -62,7 +62,13 @@ static void gap_params_init(void)
 
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&sec_mode);
     
-    const char deviceName[] = "ADC-UART";
+    // for RedBearLab Nano, use different name
+#ifdef BOARD_CUSTOM
+    const char deviceName[] = "ADC-UART-Nano";
+#else
+    const char deviceName[] = "ADC-UART-nRF51-DK";
+#endif
+
     err_code = sd_ble_gap_device_name_set(&sec_mode,
                                           (const uint8_t *) deviceName,
                                           strlen(deviceName));
@@ -334,7 +340,12 @@ void adc_config(void)
 
     // Initialize and configure ADC
     nrf_adc_configure( (nrf_adc_config_t *)&nrf_adc_config);
+    // for RedBearLab Nano, use P0.04 - analog ADC input 5
+#ifdef BOARD_CUSTOM 
+    nrf_adc_input_select(NRF_ADC_CONFIG_INPUT_5);
+#else 
     nrf_adc_input_select(NRF_ADC_CONFIG_INPUT_2);
+#endif
     nrf_adc_int_enable(ADC_INTENSET_END_Enabled << ADC_INTENSET_END_Pos);
     NVIC_SetPriority(ADC_IRQn, NRF_APP_PRIORITY_HIGH);
     NVIC_EnableIRQ(ADC_IRQn);
@@ -378,18 +389,25 @@ int main(void)
     adc_config();
     nrf_adc_start();
 
-    // set LED1 connected to P0.22 as output
+
+    // for RedBearLab Nano, LED is on P0.19
+#ifdef BOARD_CUSTOM 
+    // set LED connected to P0.19 as output
+    uint32_t pinNum = 19;
+#else
+    // set LED2 connected to P0.22 as output
     uint32_t pinNum = 22;
-    //nrf_gpio_cfg_output(pinNum);
+#endif
+
     nrf_gpio_pin_dir_set(pinNum, NRF_GPIO_PIN_DIR_OUTPUT);
     // Enter main loop.
     while(1) {
 
       // flash LED2 once
       nrf_gpio_pin_set(pinNum);
-      nrf_delay_ms(100);
+      nrf_delay_ms(500);
       nrf_gpio_pin_clear(pinNum);
-      nrf_delay_ms(100);
+      nrf_delay_ms(500);
 
       // send ADC value via NUS (Nordic UART service)
       uint8_t str[4];
