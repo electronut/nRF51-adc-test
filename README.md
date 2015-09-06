@@ -9,6 +9,9 @@ http://electronut.in/nrf51-adc-test/
 
 ![nRF51-DK LDR setup](nrf-ldr-main.jpg "nRF51-DK LDR setup")
 
+### nRF51822 Breakout Board
+
+![nRF51-bo](nRF51-BO-SWD-DK "nRF51-bo setup")
 
 ### RedBearLab Nano
 
