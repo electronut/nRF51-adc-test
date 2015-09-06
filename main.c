@@ -390,11 +390,19 @@ int main(void)
     nrf_adc_start();
 
 
+#ifdef BOARD_CUSTOM // custom board
+    
+    // ExploreEmbedded/Electronut breakout board
+#ifdef BOARD_E3BO
+    // set LED connected to P0.21 as output
+    uint32_t pinNum = 21;
+#else
     // for RedBearLab Nano, LED is on P0.19
-#ifdef BOARD_CUSTOM 
     // set LED connected to P0.19 as output
     uint32_t pinNum = 19;
-#else
+#endif
+
+#else // nRF51-DK
     // set LED2 connected to P0.22 as output
     uint32_t pinNum = 22;
 #endif
